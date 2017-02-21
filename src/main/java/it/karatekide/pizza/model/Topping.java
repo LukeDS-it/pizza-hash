@@ -1,11 +1,14 @@
 package it.karatekide.pizza.model;
 
+/**
+ * Enum representation of the topping.
+ */
 public enum Topping {
     MUSHROOM("M"), TOMATO("T");
 
     private String value;
 
-    private Topping(String value) {
+    Topping(String value) {
         this.value = value;
     }
 

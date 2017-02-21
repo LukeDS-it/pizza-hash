@@ -12,6 +12,19 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Test class for the pizza slicer.
+ *
+ * Tests on all four data sets and outputs the relative
+ * .out file on the target/test-classes directory.
+ * It also prints on console output the statistics of the
+ * current test run and (if the number of slices is not too big)
+ * the sliced pizza diagram. Please note that the "big" data set
+ * may take quite a lot of time if you're not running a very powerful
+ * machine (>3 minutes on an i3 quad-core)
+ *
+ * @author Luca Di Stefano
+ */
 public class PizzaTest {
 
     private final static String FILE_EXAMPLE = "example", FILE_SMALL = "small",
