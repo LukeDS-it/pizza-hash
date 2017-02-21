@@ -21,21 +21,26 @@ reach the minimum required, the selection is just one cell, or the selection
 is over the maximum allowed size) to any decimal number, positive or negative,
 depending on the current and previous selection.
 
-The choice of the weight is influenced by
-* Going towards the minimum number of ingredients required will 
-influence the score positively (this will assign one point for every
-ingredient type that helps towards the goal)
-* Removing topping that are in excess will influence the score positively
- by the ratio of topping that has been removed (say that in an iteration
- 2/3 of exceeding Tomatoes have been removed, then the score will increase of 0.6)
-* Similarly, removing topping that is not in excess (thus resulting in
-reducing the total number of slices that can be made) will influence the
-score negatively by the same ratio of topping that has been removed (say
-that in an iteration 2/3 of Mushrooms have been removed, but we were
-lacking in them, will result in a score decrease of 0.6)
-* Not ethat if the scarce topping is removed, but it was needed to reach the minimum
-topping quantity on a slice, score is still increased, even if by a lesser
-quantity.
+The choice of the weight is influenced by the following constraints:
+* **Minimum Ingredients Constraint:** Going towards the minimum number of
+ingredients required will influence the score positively (this will assign
+one point for every ingredient type that helps towards the goal)
+* **Removal of the Unwanted Constraint:** Removing topping that are in excess
+will influence the score positively by the ratio of topping that has been
+removed (say that in an iteration 2/3 of exceeding Tomatoes have been
+removed, then the score will increase of 0.6)
+* **Mourning of the Best Constraint** Similarly, removing topping that is
+not in excess (thus resulting in reducing the total number of slices that
+can be made) will influence the score negatively by the same ratio of topping
+that has been removed (say that in an iteration 2/3 of Mushrooms have been
+removed, but we were lacking in them, will result in a score decrease of 0.6)
+* **Died for Better Cause Constraint:** If the scarce topping is removed,
+but it was needed to reach the minimum topping quantity on a slice,
+score is still increased, even if by a lesser quantity.
+* **Forced Path Constraint** (added in 1.1) If we're going in the only possible direction, e.g. because we've reached
+the frontier of the pizza, even if we're reducing the ingredient that we're
+short with, we are actually avoiding waste, so we're going towards a better
+solution
 
 After all the possible nodes have been built, a slice is created choosing the
 best fit (the node with the highest score). The corresponding cells (toppings)
@@ -45,23 +50,35 @@ The following iteration takes then the first available node in the top-left
 cell of the pizza.
 
 ## Results ##
+
 ### Example set ###
 The example set has been used as test suite to ensure the solution is
 optimal. 100% of the cells are used, in 3 slices, divided as the
 original solution provided
+
 ### Small set ###
-The small data set test runs smoothly with 90.48% of cells used.
-Some cells that should have been used are left to waste, so this will
-need some tweaking of the weighing system.
+Without the latest condition added in 1.1, he small data set test
+ran with 90.48% of cells used.
+
+Some cells that should have been used
+were left to waste, so the weighing system was modified to take into account
+the "Forced Path Constraint (FPC)" as described above. Waste was reduced to
+2 cells, with a score of 95.24% of pizza used.
+
 ### Medium set ###
 The test runs in under a second, with 96.6% of cells used and 4'442 slices
 produced.
+
+With FPC, cells used are 97.82%, 4510 slices produced.
+
 ### Big set ###
 The test takes quite a while to run (can vary based on CPU speed, from
 1 minute to more than 3) and has a score of 89.25% of used cells, with
 65'817 slices produced. Even if the percentage is quite good, 107'501 cells
-are marked as wasted, maybe improving the weighing system to maximise the
-result of the small set will improve the results on the other data sets as well.
+are marked were wasted.
+Adding FPC improved the score to 89.67%, waste was reduced to 103'302 cells:
+4'199 cells were saved from waste, producing 66'148 slices, 331 more than the
+previous run.
 
 ## Credits ##
 * First release, idea and code by me.

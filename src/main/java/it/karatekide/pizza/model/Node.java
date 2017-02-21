@@ -140,6 +140,22 @@ public class Node implements Comparable<Node> {
      *
      *         The opposite reasoning is done with having more mushrooms.<br />
      *     </li>
+     *     <li>
+     *         To avoid waste, if we're going in the only possible direction, we must increase the
+     *         score.<br />
+     *         e.g. if we're having the following
+     *         <code>
+     *             T<br />
+     *             M<br />
+     *             M<br />
+     *             M<br />
+     *             M<br />
+     *             M<br />
+     *         </code>
+     *         even if we're going down and reducing the
+     *         quantity of mushrooms, it's the only thing we can do, so we're actually avoiding
+     *         waste and going towards the best possible solution.
+     *     </li>
      * </ul>
      *
      * @return the calculated weight for the node, that can be any value except "minus infinite"
@@ -179,6 +195,10 @@ public class Node implements Comparable<Node> {
                     tmp += mRatio;
                 if (tomatoDiff < 0)
                     tmp -= tRatio;
+            }
+
+            if (slicer.getPizza().getRightNode(endCell()) == null || slicer.getPizza().getBottomNode(endCell()) == null) {
+                tmp++;
             }
         }
 
