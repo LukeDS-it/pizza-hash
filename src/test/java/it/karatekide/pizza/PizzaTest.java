@@ -1,9 +1,9 @@
 package it.karatekide.pizza;
 
-import it.karatekide.pizza.model.Pizza;
+import it.karatekide.pizza.tree.Pizza;
 
-import it.karatekide.pizza.model.Slice;
-import it.karatekide.pizza.model.Slicer;
+import it.karatekide.pizza.tree.Slice;
+import it.karatekide.pizza.tree.Slicer;
 import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 

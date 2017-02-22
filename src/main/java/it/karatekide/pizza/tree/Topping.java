@@ -1,4 +1,4 @@
-package it.karatekide.pizza.model;
+package it.karatekide.pizza.tree;
 
 /**
  * Enum representation of the topping.

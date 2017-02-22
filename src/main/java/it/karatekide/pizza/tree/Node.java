@@ -1,7 +1,7 @@
-package it.karatekide.pizza.model;
+package it.karatekide.pizza.tree;
 
-import static it.karatekide.pizza.model.Topping.MUSHROOM;
-import static it.karatekide.pizza.model.Topping.TOMATO;
+import static it.karatekide.pizza.tree.Topping.MUSHROOM;
+import static it.karatekide.pizza.tree.Topping.TOMATO;
 import static java.lang.Double.MAX_VALUE;
 
 /**
@@ -63,11 +63,11 @@ public class Node implements Comparable<Node> {
         weight = getWeightInternal();
 
         Cell rightCell = slicer.getPizza().getRightNode(end);
-        if (rightCell != null && getSliceArea(start, rightCell) <= slicer.getPizza().getMaxSize())
+        if (rightCell != null && getSliceArea(start, rightCell) <= slicer.getPizza().getMaxSize() && !slicer.getPizza().hasEmptyCells(start, rightCell))
             right = new Node(start, rightCell, slicer, this);
 
         Cell bottomCell = slicer.getPizza().getBottomNode(end);
-        if (bottomCell != null && getSliceArea(start, bottomCell) <= slicer.getPizza().getMaxSize())
+        if (bottomCell != null && getSliceArea(start, bottomCell) <= slicer.getPizza().getMaxSize() && !slicer.getPizza().hasEmptyCells(start, bottomCell))
             bottom = new Node(start, bottomCell, slicer, this);
     }
 

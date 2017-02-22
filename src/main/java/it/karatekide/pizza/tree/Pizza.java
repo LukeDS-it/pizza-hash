@@ -1,13 +1,11 @@
-package it.karatekide.pizza.model;
+package it.karatekide.pizza.tree;
 
 import lombok.Getter;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
-import static it.karatekide.pizza.model.Topping.MUSHROOM;
-import static it.karatekide.pizza.model.Topping.TOMATO;
+import static it.karatekide.pizza.tree.Topping.MUSHROOM;
+import static it.karatekide.pizza.tree.Topping.TOMATO;
 
 /**
  * Representation of the whole pizza.
@@ -24,8 +22,7 @@ import static it.karatekide.pizza.model.Topping.TOMATO;
  */
 public class Pizza {
 
-    private final static char WASTED_PIZZA = '#';
-    private final static int FIRST_CHAR = 48;
+    private final static String WASTED_PIZZA = "(  #  )";
 
     @Getter
     private int minIngredient;
@@ -36,7 +33,9 @@ public class Pizza {
     @Getter
     private Topping[][] pizza;
 
-    private char[][] sliceDesc;
+    private List<Integer> probes = new ArrayList<>();
+
+    private String[][] sliceDesc;
     private int lastSlice = 0;
 
     private Map<Topping, Integer> allToppings = new HashMap<>();
@@ -59,7 +58,7 @@ public class Pizza {
         maxSize = Integer.parseInt(init[3]);
 
         pizza = new Topping[rows][cols];
-        sliceDesc = new char[rows][cols];
+        sliceDesc = new String[rows][cols];
 
         int row = 0;
         while (s.hasNextLine()) {
@@ -115,6 +114,10 @@ public class Pizza {
         int startY = slice.start.y;
         int endY = slice.end.y;
 
+        if (probes.contains(lastSlice)) {
+            System.out.println("Processing slice " + getPizzaChar(lastSlice));
+        }
+
         for (int row = startX; row <= endX; row++) {
             for (int col = startY; col <= endY; col++) {
                 Topping t = pizza[row][col];
@@ -122,7 +125,13 @@ public class Pizza {
                     allToppings.replace(t, allToppings.get(t) - 1);
                     pizza[row][col] = null;
                     sliceDesc[row][col] = getPizzaChar(lastSlice);
+                    if (probes.contains(lastSlice)) {
+                        System.out.print("(" + t.getValue() + " " + row + "x" + col + ")");
+                    }
                 }
+            }
+            if (probes.contains(lastSlice)) {
+                System.out.println();
             }
         }
         lastSlice++;
@@ -211,6 +220,16 @@ public class Pizza {
         return null;
     }
 
+    boolean hasEmptyCells(Cell from, Cell to) {
+        for (int x = from.x; x <= to.x; x++) {
+            for (int y = from.y; y <= to.y; y++) {
+                if (pizza[x][y] == null)
+                    return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * Indicates if there are still ingredients left in the pizza
      *
@@ -236,9 +255,9 @@ public class Pizza {
      */
     public String getSliceDesc() {
         StringBuilder sb = new StringBuilder("~~~~~~~ HERE IS YOUR PIZZA ~~~~~~~\n");
-        for (char[] rows: sliceDesc) {
-            for (char cell: rows) {
-                sb.append(cell).append(" ");
+        for (String[] rows: sliceDesc) {
+            for (String cell: rows) {
+                sb.append(cell);
             }
             sb.append("\n");
         }
@@ -269,11 +288,16 @@ public class Pizza {
      * @param lastSlice number of last slice
      * @return character representation of slice
      */
-    private char getPizzaChar(int lastSlice) {
-        int candidate = lastSlice + FIRST_CHAR;
-        if (candidate <= 64 && candidate >= 58) {
-            candidate += 7;
-        }
-        return (char) (candidate);
+    private String getPizzaChar(int lastSlice) {
+        return "(" + String.format("%05d", lastSlice) + ")";
+    }
+
+    public void addProbe(int sliceNum) {
+        probes.add(sliceNum);
+    }
+
+    public void addProbes(int... slices) {
+        for (Integer s: slices)
+            addProbe(s);
     }
 }
